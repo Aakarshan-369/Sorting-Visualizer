@@ -1,6 +1,5 @@
 
 async function mergeSort(bars, array) {
-   
     let positions = Array.from({length: array.length}, (_, i) => i);
     if (array.length <= 1) return array;
     let middle = Math.floor(array.length / 2);
@@ -13,7 +12,16 @@ async function mergeSort(bars, array) {
     right = await mergeSort(bars, right, rightPos);
 
     return merge(bars, left, right, leftPos, rightPos);
+  
+}
+async function enablebuttons(){
+    var buttons = document.querySelectorAll("#btngrp button");
+for (var i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = false;
+    buttons[i].classList.remove("btn-warning");
+    buttons[i].classList.add("btn-success");
     
+} 
 }
 
 async function merge(bars, left, right, leftPos, rightPos) {
@@ -24,17 +32,15 @@ async function merge(bars, left, right, leftPos, rightPos) {
     while (leftIndex < left.length && rightIndex < right.length) {
         if (left[leftIndex] < right[rightIndex]) {
             sorted.push(left[leftIndex]);
-            sortedPos.push(leftPos[leftIndex])
-            bars[leftPos[leftIndex]].style.background = 'rgb(' +255 + ',' + 0 + ',' + 0 + ')';
+            sortedPos.push(leftPos[leftIndex]);
             leftIndex++;
         } else {
             sorted.push(right[rightIndex]);
             sortedPos.push(rightPos[rightIndex]);
-            bars[rightPos[rightIndex]].style.background = 'rgb(' +255 + ',' + 0 + ',' + 0 + ')';
             rightIndex++;
         }
-        await new Promise(resolve => setTimeout(() => { resolve() }, 20));
     }
+
     while (leftIndex < left.length) {
         sorted.push(left[leftIndex]);
         sortedPos.push(leftPos[leftIndex]);
@@ -45,10 +51,18 @@ async function merge(bars, left, right, leftPos, rightPos) {
         sortedPos.push(rightPos[rightIndex]);
         rightIndex++;
     }
-    for (let i = 0; i < sorted.length; i++) {
-        bars[sortedPos[i]].style.height = `${sorted[i]*5}px`;
-        bars[sortedPos[i]].setAttribute("value", sorted[i]);
-        bars[sortedPos[i]].style.background = 'rgb(' +204 + ',' + 255 + ',' + 0 + ')';
-    }
-    
+    await updateBars(bars, sorted, sortedPos);
+    await new Promise(resolve => setTimeout(() => { resolve() }, 50));
+    return sorted;
 }
+
+
+// function to update the bars
+async function updateBars(bars, sorted, sortedPos) {
+    for (let i = 0; i < sortedPos.length; i++) {
+        bars[sortedPos[i]].style.height = `${sorted[i]*5}px`;
+        bars[sortedPos[i]].style.background = 'rgb(' +204 + ',' + 255 + ',' + 0 + ')';
+        
+    }
+}
+
